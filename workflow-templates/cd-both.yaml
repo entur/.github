@@ -7,20 +7,20 @@ on:
       - $default-branch
 jobs:
   docker-push:
-    name: Docker Push
+    name: 'Docker Push'
     uses: entur/gha-docker/.github/workflows/push.yaml@main
     secrets: inherit
   # DEV
   dev-terraform-apply:
     needs: docker-push
-    name: Terraform Apply
+    name: 'Terraform Apply'
     uses: entur/gha-terraform/.github/workflows/apply.yaml@main
     with:
       environment: dev
     secrets: inherit
   dev-helm-deploy:
     needs: dev-terraform-apply
-    name: Docker Deploy
+    name: 'Docker Deploy'
     uses: entur/gha-helm/.github/workflows/deploy.yaml@main
     with:
       environment: dev
@@ -28,14 +28,14 @@ jobs:
   # TST
   tst-terraform-apply:
     needs: dev-helm-deploy
-    name: Terraform Apply
+    name: 'Terraform Apply'
     uses: entur/gha-terraform/.github/workflows/apply.yaml@main
     with:
       environment: tst
     secrets: inherit
   tst-helm-deploy:
     needs: tst-terraform-apply
-    name: Docker Deploy
+    name: 'Docker Deploy'
     uses: entur/gha-helm/.github/workflows/deploy.yaml@main
     with:
       environment: tst
@@ -43,14 +43,14 @@ jobs:
   # PRD
   prd-terraform-apply:
     needs: tst-helm-deploy
-    name: Terraform Apply
+    name: 'Terraform Apply'
     uses: entur/gha-terraform/.github/workflows/apply.yaml@main
     with:
       environment: prd
     secrets: inherit
   prd-helm-deploy:
     needs: prd-terraform-apply
-    name: Docker Deploy
+    name: 'Docker Deploy'
     uses: entur/gha-helm/.github/workflows/deploy.yaml@main
     with:
       environment: prd

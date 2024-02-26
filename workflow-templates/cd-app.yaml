@@ -7,13 +7,13 @@ on:
       - $default-branch
 jobs:
   docker-push:
-    name: Docker Push
+    name: 'Docker Push'
     uses: entur/gha-docker/.github/workflows/push.yaml@main
     secrets: inherit
   # DEV
   dev-helm-deploy:
     needs: docker-push
-    name: Docker Deploy
+    name: 'Docker Deploy'
     uses: entur/gha-helm/.github/workflows/deploy.yaml@main
     with:
       environment: dev
@@ -21,7 +21,7 @@ jobs:
   # TST
   tst-helm-deploy:
     needs: dev-helm-deploy
-    name: Docker Deploy
+    name: 'Docker Deploy'
     uses: entur/gha-helm/.github/workflows/deploy.yaml@main
     with:
       environment: tst
@@ -29,7 +29,7 @@ jobs:
   # PRD
   prd-helm-deploy:
     needs: tst-helm-deploy
-    name: Docker Deploy
+    name: 'Docker Deploy'
     uses: entur/gha-helm/.github/workflows/deploy.yaml@main
     with:
       environment: prd
