@@ -1,0 +1,36 @@
+# TODO: This file comes from entur/.github/workflows/cd-app.yaml
+#       Adopt to your needs, this file is yours now.
+name: CD
+on:
+  push:
+    branches:
+      - $default-branch
+jobs:
+  docker-push:
+    name: Docker Push
+    uses: entur/gha-docker/.github/workflows/push.yaml@main
+    secrets: inherit
+  # DEV
+  dev-helm-deploy:
+    needs: docker-push
+    name: Docker Deploy
+    uses: entur/gha-helm/.github/workflows/deploy.yaml@main
+    with:
+      environment: dev
+    secrets: inherit
+  # TST
+  tst-helm-deploy:
+    needs: dev-helm-deploy
+    name: Docker Deploy
+    uses: entur/gha-helm/.github/workflows/deploy.yaml@main
+    with:
+      environment: tst
+    secrets: inherit
+  # PRD
+  prd-helm-deploy:
+    needs: tst-helm-deploy
+    name: Docker Deploy
+    uses: entur/gha-helm/.github/workflows/deploy.yaml@main
+    with:
+      environment: prd
+    secrets: inherit

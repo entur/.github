@@ -1,0 +1,31 @@
+# TODO: This file comes from entur/.github/workflows/cd-tf.yaml
+#       Adopt to your needs, this file is yours now.
+name: CD
+on:
+  push:
+    branches:
+      - $default-branch
+jobs:
+  # DEV
+  dev-terraform-apply:
+    name: Terraform Apply
+    uses: entur/gha-terraform/.github/workflows/apply.yaml@main
+    with:
+      environment: dev
+    secrets: inherit
+  # TST
+  tst-terraform-apply:
+    needs: dev-terraform-apply
+    name: Terraform Apply
+    uses: entur/gha-terraform/.github/workflows/apply.yaml@main
+    with:
+      environment: tst
+    secrets: inherit
+  # PRD
+  prd-terraform-apply:
+    needs: tst-terraform-apply
+    name: Terraform Apply
+    uses: entur/gha-terraform/.github/workflows/apply.yaml@main
+    with:
+      environment: prd
+    secrets: inherit

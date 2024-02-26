@@ -1,0 +1,32 @@
+# TODO: This file comes from entur/.github/workflows/ci-docker.yaml
+#       You may not need terraform, or use a different Dockerfile
+#       Simply delete what you do not need. This file is yours now.
+name: CI
+on:
+  pull_request:
+    branches:
+      - $default-branch
+jobs:
+  helm-lint:
+    name: Docker Lint
+    uses: entur/gha-docker/.github/workflows/lint.yaml@main
+  terraform-lint:
+    name: Terraform Lint
+    uses: entur/gha-terraform/.github/workflows/lint.yaml@main
+  docker-lint:
+    name: Docker Lint
+    uses: entur/gha-docker/.github/workflows/lint.yaml@main
+  docker-build:
+    name: Docker Build
+    uses: entur/gha-docker/.github/workflows/build.yaml@main
+    # with:
+    #   dockerfile: Dockerfile
+  terraform-plan:
+    name: Terraform Plan
+    uses: entur/gha-terraform/.github/workflows/plan.yaml@main
+    strategy:
+      matrix:
+        env: [dev, tst, prd]
+    with:
+      environment: ${{ matrix.env }}
+    secrets: inherit
