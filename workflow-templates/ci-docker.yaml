@@ -1,3 +1,6 @@
+# ╔═╗╔═╗╔╦╗╔═╗╦  ╔═╗       ╔╗╔╔═╗╔╦╗  ╦═╗╔═╗╔═╗╔╦╗╦ ╦  ╔═╗╔═╗╦═╗  ╦ ╦╔═╗╔═╗
+# ╚═╗╠═╣║║║╠═╝║  ║╣   ───  ║║║║ ║ ║   ╠╦╝║╣ ╠═╣ ║║╚╦╝  ╠╣ ║ ║╠╦╝  ║ ║╚═╗║╣ 
+# ╚═╝╩ ╩╩ ╩╩  ╩═╝╚═╝       ╝╚╝╚═╝ ╩   ╩╚═╚═╝╩ ╩═╩╝ ╩   ╚  ╚═╝╩╚═  ╚═╝╚═╝╚═╝
 # TODO: This file comes from entur/.github/workflows/ci-docker.yaml
 #       You may not need terraform, or use a different Dockerfile
 #       Simply delete what you do not need. This file is yours now.

@@ -1,3 +1,6 @@
+# ╔═╗╔═╗╔╦╗╔═╗╦  ╔═╗       ╔╗╔╔═╗╔╦╗  ╦═╗╔═╗╔═╗╔╦╗╦ ╦  ╔═╗╔═╗╦═╗  ╦ ╦╔═╗╔═╗
+# ╚═╗╠═╣║║║╠═╝║  ║╣   ───  ║║║║ ║ ║   ╠╦╝║╣ ╠═╣ ║║╚╦╝  ╠╣ ║ ║╠╦╝  ║ ║╚═╗║╣ 
+# ╚═╝╩ ╩╩ ╩╩  ╩═╝╚═╝       ╝╚╝╚═╝ ╩   ╩╚═╚═╝╩ ╩═╩╝ ╩   ╚  ╚═╝╩╚═  ╚═╝╚═╝╚═╝
 # TODO: This file comes from entur/.github/workflows/cd-app.yaml
 #       Adopt to your needs, this file is yours now.
 name: CD

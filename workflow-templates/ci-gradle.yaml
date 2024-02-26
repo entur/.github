@@ -1,3 +1,6 @@
+# ╔═╗╔═╗╔╦╗╔═╗╦  ╔═╗       ╔╗╔╔═╗╔╦╗  ╦═╗╔═╗╔═╗╔╦╗╦ ╦  ╔═╗╔═╗╦═╗  ╦ ╦╔═╗╔═╗
+# ╚═╗╠═╣║║║╠═╝║  ║╣   ───  ║║║║ ║ ║   ╠╦╝║╣ ╠═╣ ║║╚╦╝  ╠╣ ║ ║╠╦╝  ║ ║╚═╗║╣ 
+# ╚═╝╩ ╩╩ ╩╩  ╩═╝╚═╝       ╝╚╝╚═╝ ╩   ╩╚═╚═╝╩ ╩═╩╝ ╩   ╚  ╚═╝╩╚═  ╚═╝╚═╝╚═╝
 # TODO: This file comes from entur/.github/workflows/ci-java.yaml
 #       You may not need terraform, or use different gradle commands
 #       Simply delete what you do not need. This file is yours now.
