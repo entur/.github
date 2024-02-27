@@ -11,8 +11,8 @@ on:
       - $default-branch
 jobs:
   helm-lint:
-    name: 'Docker Lint'
-    uses: entur/gha-docker/.github/workflows/lint.yaml@main
+    name: 'Helm Lint'
+    uses: entur/gha-helm/.github/workflows/lint.yaml@main
   terraform-lint:
     name: 'Terraform Lint'
     uses: entur/gha-terraform/.github/workflows/lint.yaml@main

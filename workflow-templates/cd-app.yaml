@@ -16,7 +16,7 @@ jobs:
   # DEV
   dev-helm-deploy:
     needs: docker-push
-    name: 'Docker Deploy'
+    name: 'Docker Deploy Dev'
     uses: entur/gha-helm/.github/workflows/deploy.yaml@main
     with:
       environment: dev
@@ -24,7 +24,7 @@ jobs:
   # TST
   tst-helm-deploy:
     needs: dev-helm-deploy
-    name: 'Docker Deploy'
+    name: 'Docker Deploy Tst'
     uses: entur/gha-helm/.github/workflows/deploy.yaml@main
     with:
       environment: tst
@@ -32,7 +32,7 @@ jobs:
   # PRD
   prd-helm-deploy:
     needs: tst-helm-deploy
-    name: 'Docker Deploy'
+    name: 'Docker Deploy Prd'
     uses: entur/gha-helm/.github/workflows/deploy.yaml@main
     with:
       environment: prd

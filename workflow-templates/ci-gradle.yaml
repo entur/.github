@@ -20,7 +20,7 @@ jobs:
     name: 'Gradle Lint'
     uses: entur/gha-gradle/.github/workflows/run.yaml@main
     with:
-      run: lint
+      run: 'lint'
   docker-lint:
     name: 'Docker Lint'
     uses: entur/gha-docker/.github/workflows/lint.yaml@main

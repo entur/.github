@@ -11,7 +11,7 @@ on:
 jobs:
   # DEV
   dev-terraform-apply:
-    name: 'Terraform Apply'
+    name: 'Terraform Apply Dev'
     uses: entur/gha-terraform/.github/workflows/apply.yaml@main
     with:
       environment: dev
@@ -19,7 +19,7 @@ jobs:
   # TST
   tst-terraform-apply:
     needs: dev-terraform-apply
-    name: 'Terraform Apply'
+    name: 'Terraform Apply Tst'
     uses: entur/gha-terraform/.github/workflows/apply.yaml@main
     with:
       environment: tst
@@ -27,7 +27,7 @@ jobs:
   # PRD
   prd-terraform-apply:
     needs: tst-terraform-apply
-    name: 'Terraform Apply'
+    name: 'Terraform Apply Prd'
     uses: entur/gha-terraform/.github/workflows/apply.yaml@main
     with:
       environment: prd
