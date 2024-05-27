@@ -1,5 +1,5 @@
 # ╔═╗╔═╗╔╦╗╔═╗╦  ╔═╗       ╔╗╔╔═╗╔╦╗  ╦═╗╔═╗╔═╗╔╦╗╦ ╦  ╔═╗╔═╗╦═╗  ╦ ╦╔═╗╔═╗
-# ╚═╗╠═╣║║║╠═╝║  ║╣   ───  ║║║║ ║ ║   ╠╦╝║╣ ╠═╣ ║║╚╦╝  ╠╣ ║ ║╠╦╝  ║ ║╚═╗║╣ 
+# ╚═╗╠═╣║║║╠═╝║  ║╣   ───  ║║║║ ║ ║   ╠╦╝║╣ ╠═╣ ║║╚╦╝  ╠╣ ║ ║╠╦╝  ║ ║╚═╗║╣
 # ╚═╝╩ ╩╩ ╩╩  ╩═╝╚═╝       ╝╚╝╚═╝ ╩   ╩╚═╚═╝╩ ╩═╩╝ ╩   ╚  ╚═╝╩╚═  ╚═╝╚═╝╚═╝
 # TODO: This file comes from entur/.github/workflows/ci-docker.yaml
 #       You may not need terraform, or use a different Dockerfile
@@ -10,26 +10,15 @@ on:
     branches:
       - $default-branch
 jobs:
-  helm-lint:
-    name: 'Helm Lint'
-    uses: entur/gha-helm/.github/workflows/lint.yaml@main
-  terraform-lint:
-    name: 'Terraform Lint'
-    uses: entur/gha-terraform/.github/workflows/lint.yaml@main
   docker-lint:
-    name: 'Docker Lint'
-    uses: entur/gha-docker/.github/workflows/lint.yaml@main
-  docker-build:
-    name: 'Docker Build'
-    uses: entur/gha-docker/.github/workflows/build.yaml@main
-    # with:
-    #   dockerfile: Dockerfile
-  terraform-plan:
-    name: 'Terraform Plan'
-    uses: entur/gha-terraform/.github/workflows/plan.yaml@main
-    strategy:
-      matrix:
-        env: [dev, tst, prd]
+    uses: entur/gha-docker/.github/workflows/lint.yml@v1
+  helm-lint:
+    uses: entur/gha-helm/.github/workflows/lint.yml@v1
     with:
-      environment: ${{ matrix.env }}
-    secrets: inherit
+      environment: dev
+  terraform-lint:
+    uses: entur/gha-terraform/.github/workflows/lint.yml@v1
+  terraform-plan:
+    uses: entur/gha-terraform/.github/workflows/plan.yml@v1
+    with:
+      environment: dev
