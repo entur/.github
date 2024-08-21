@@ -60,5 +60,3 @@ jobs:
     name: Push Docker Image
     needs: docker-build
     uses: entur/gha-docker/.github/workflows/push.yml@v1
-    with:
-      environment: prd
