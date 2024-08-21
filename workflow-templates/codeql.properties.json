@@ -1,5 +1,6 @@
 {
-  "name": "CodeQL Scanning",
-  "description": "Entur CodeQL Scanning",
-  "categories": ["Vulnerability Scanning", "Code Quality"]
+  "name": "CodeQL Scan",
+  "description": "Entur CodeQL Scan Template",
+  "categories": ["code-quality", "dependency-management"],
+  "iconName": "octicon codescan-checkmark"
 }

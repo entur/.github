@@ -1,5 +1,6 @@
 {
-  "name": "CI Docker",
-  "description": "Entur CI Docker Starter",
-  "categories": ["Docker"]
+  "name": "Docker Build and Push",
+  "description": "Entur Docker Build and Push Template",
+  "categories": ["Dockerfile","Containerfile","continuous-integration"],
+  "iconName": "octicon container"
 }
