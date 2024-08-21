@@ -1,0 +1,41 @@
+#  ____   _                            _
+# / ___| | |__    __ _  _ __  ___   __| |
+# \___ \ | '_ \  / _` || '__|/ _ \ / _` |
+#  ___) || | | || (_| || |  |  __/| (_| |
+# |____/ |_| |_| \__,_||_|   \___| \__,_|
+# __        __            _      __  _
+# \ \      / /___   _ __ | | __ / _|| |  ___ __      __ ___
+#  \ \ /\ / // _ \ | '__|| |/ /| |_ | | / _ \\ \ /\ / // __|
+#   \ V  V /| (_) || |   |   < |  _|| || (_) |\ V  V / \__ \
+#    \_/\_/  \___/ |_|   |_|\_\|_|  |_| \___/  \_/\_/  |___/
+#         ____            _         ___   _       ____
+# __/\__ / ___| ___    __| |  ___  / _ \ | |     / ___|   ___  __ _  _ __
+# \    /| |    / _ \  / _` | / _ \| | | || |     \___ \  / __|/ _` || '_ \
+# /_  _\| |___| (_) || (_| ||  __/| |_| || |___   ___) || (__| (_| || | | |
+#   \/   \____|\___/  \__,_| \___| \__\_\|_____| |____/  \___|\__,_||_| |_|
+#
+# Shared Workflows - CodeQL Scan
+#
+# Reusable Workflows used:
+# * Docker Lint
+#   * Readme <https://github.com/entur/gha-security/blob/main/README-code-scan.md>
+#   * Owner: Team Sikkerhet
+#   * Slack: #talk-sikkerhet
+#
+# TODO: This file comes from entur/.github/workflows/codeql.yml
+#       Adopt to your needs, this file is yours now.
+#
+name: "CodeQL Scan"
+
+on:
+  pull_request:
+    branches:
+      - $default-branch
+  schedule:
+    - cron: "0 5 * * MON" # Run every Monday at 5am
+
+jobs:
+  code-scan:
+    name: CodeQL Scan
+    uses: entur/gha-security/.github/workflows/code-scan.yml@v1
+    secrets: inherit
