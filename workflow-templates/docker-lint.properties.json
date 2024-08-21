@@ -1,0 +1,5 @@
+{
+  "name": "Docker Lint",
+  "description": "Entur Docker Lint",
+  "categories": ["Docker", "Lint", "Code Quality"]
+}

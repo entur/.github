@@ -1,0 +1,5 @@
+{
+  "name": "CodeQL Scanning",
+  "description": "Entur CodeQL Scanning",
+  "categories": ["Vulnerability Scanning", "Code Quality"]
+}
