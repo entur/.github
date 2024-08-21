@@ -1,5 +1,6 @@
 {
   "name": "Docker Lint",
-  "description": "Entur Docker Lint",
-  "categories": ["Docker", "Lint", "Code Quality"]
+  "description": "Entur Docker Lint Template",
+  "categories": ["Dockerfile","Containerfile", "testing", "code-quality"],
+  "iconName": "octicon codescan"
 }
