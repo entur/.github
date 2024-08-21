@@ -14,6 +14,10 @@
 #   * Readme: <https://github.com/entur/gha-docker/blob/main/README-push.md>
 #   * Owner: Team Plattform
 #   * Slack: #Talk-plattform
+# * Docker Scan
+#   * Readme <https://github.com/entur/gha-security/blob/main/README-docker-scan.md>
+#   * Owner: Team Sikkerhet
+#   * Slack: #talk-sikkerhet
 #
 # Prerequisites:
 #    Appfactory Setup
@@ -44,3 +48,9 @@ jobs:
     name: Push Docker Image
     needs: docker-build
     uses: entur/gha-docker/.github/workflows/push.yml@v1
+  docker-scan:
+    name: Scan Docker Image
+    needs: docker-build
+    uses: entur/gha-security/.github/workflows/docker-scan.yml@v1
+    with:
+      image_artifact: ${{ needs.docker-build.outputs.image_artifact }}
