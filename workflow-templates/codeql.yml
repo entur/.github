@@ -2,7 +2,7 @@
 # Shared Workflows - CodeQL Scan
 #
 # Reusable Workflows used:
-# * Docker Lint
+# * Code Scan
 #   * Readme <https://github.com/entur/gha-security/blob/main/README-code-scan.md>
 #   * Owner: Team Sikkerhet
 #   * Slack: #talk-sikkerhet
