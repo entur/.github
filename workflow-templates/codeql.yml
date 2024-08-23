@@ -16,8 +16,11 @@ on:
   pull_request:
     branches:
       - $default-branch
+  push:
+    branches:
+      - $default-branch
   schedule:
-    - cron: "0 5 * * MON" # Run every Monday at 5am
+    - cron: "0 5 * * MON" # Run every Monday at 5AM UTC
 
 jobs:
   code-scan:
