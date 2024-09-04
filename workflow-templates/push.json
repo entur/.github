@@ -1,0 +1,6 @@
+{
+  "name": "Merge to main Workflow",
+  "description": "Entur Merge Workflow Template",
+  "categories": ["Dockerfile", "Containerfile"],
+  "iconName": "octicon git-merge"
+}

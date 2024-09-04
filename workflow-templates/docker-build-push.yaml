@@ -22,7 +22,7 @@
 # Prerequisites:
 #    Appfactory Setup
 #
-# TODO: This file comes from entur/.github/workflows/ci-docker.yaml
+# TODO: This file comes from entur/.github/workflow-templates/docker-build-push.yaml
 #       Simply delete what you do not need. This file is yours now.
 #
 name: Docker Build and Push
