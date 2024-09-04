@@ -7,7 +7,7 @@
 #   * Owner: Team Sikkerhet
 #   * Slack: #talk-sikkerhet
 #
-# TODO: This file comes from entur/.github/workflows/codeql.yml
+# TODO: This file comes from entur/.github/workflow-templates/codeql.yml
 #       Adopt to your needs, this file is yours now.
 #
 name: CodeQL Scan
@@ -20,7 +20,7 @@ on:
     branches:
       - $default-branch
   schedule:
-    - cron: "0 5 * * MON" # Run every Monday at 5AM UTC
+    - cron: "0 3 * * 1-5" # Run Monday to Friday at 3AM UTC
 
 jobs:
   code-scan:
