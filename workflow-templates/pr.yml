@@ -14,7 +14,6 @@ jobs:
 
   # Gradle build example
   gradle-build: # https://github.com/actions/starter-workflows/blob/main/ci/gradle.yml
-    if: ${{ github.triggering_actor != 'dependabot[bot]' }}
     runs-on: ubuntu-24.04
     permissions:
       contents: read
