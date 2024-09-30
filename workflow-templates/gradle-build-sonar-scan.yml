@@ -1,0 +1,138 @@
+#
+# Shared Workflows - CodeQL Scan
+#
+# Reusable Workflows used:
+# * Docker Lint
+#   * Readme <https://github.com/entur/gha-docker/blob/main/README-lint.md>
+#   * Owner: Team Plattform
+#   * Slack: #Talk-plattform
+# * Helm Lint
+#   * Readme <https://github.com/entur/gha-helm/blob/main/README-lint.md>
+#   * Owner: Team Plattform
+#   * Slack: #Talk-plattform
+# * Terraform Lint
+#   * https://github.com/entur/gha-terraform/blob/main/README-lint.md
+#   * Owner: Team Plattform
+#   * Slack: #Talk-plattform
+# * Docker Build
+#   * Readme <https://github.com/entur/gha-docker/blob/main/README-build.md>
+#   * Owner: Team Plattform
+#   * Slack: #Talk-plattform
+# * Docker Push
+#   * Readme: <https://github.com/entur/gha-docker/blob/main/README-push.md>
+#   * Owner: Team Plattform
+#   * Slack: #Talk-plattform
+# * Docker Scan
+#   * Readme <https://github.com/entur/gha-security/blob/main/README-docker-scan.md>
+#   * Owner: Team Sikkerhet
+#   * Slack: #talk-sikkerhet
+# TODO: This file comes from entur/.github/workflow-templates/gradle-build-sonar-scan.yml
+#       This shared workflow assumes you have a SonarCloud Project already setup for the repo and
+#       the gradle sonarcloud plugin setup https://docs.sonarsource.com/sonarcloud/advanced-setup/ci-based-analysis/sonarscanner-for-gradle/.
+#       The jacocoTestReports also needs to be configured https://docs.gradle.org/current/userguide/jacoco_plugin.html
+#       Set the SONAR_PROJECT_KEY environment variable to the key of the SonarCloud Project you have created.
+#       Adopt to your needs, this file is yours now!
+#
+name: Gradle Build with SonarCloud Scan
+on:
+  pull_request:
+    branches:
+      - $default-branch
+  push:
+    branches-ignore:
+    - $default-branch
+env:
+  # Setting an environment variable with the value of a configuration variable
+  JAVA_VERSION: 21
+  SONAR_PROJECT_KEY: entur_REPLACEME
+
+jobs:
+  docker-lint:
+    uses: entur/gha-docker/.github/workflows/lint.yml@v1
+
+  helm-lint:
+    name: Helm Lint
+    uses: entur/gha-helm/.github/workflows/lint.yml@v1
+    strategy:
+      matrix:
+        environment: [dev, tst, prd]
+    with:
+      environment: ${{ matrix.environment }}
+
+  terraform-lint:
+    uses: entur/gha-terraform/.github/workflows/lint.yml@v1
+
+  gradle-build: # https://github.com/actions/starter-workflows/blob/main/ci/gradle.yml
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      checks: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
+      - name: Set up JDK ${{ env.JAVA_VERSION }}
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: temurin
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+      - name: Build with Gradle Wrapper
+        run: ./gradlew build
+        env:
+          ARTIFACTORY_USER: ${{ secrets.ARTIFACTORY_USER }}
+          ARTIFACTORY_APIKEY: ${{ secrets.ARTIFACTORY_APIKEY }}
+      - name: Scan with SonarQube
+        run: |
+            ./gradlew jacocoTestReport sonar --no-scan --no-rebuild -x test \
+                -Dsonar.projectKey=${{ env.SONAR_PROJECT_KEY }} \
+                -Dsonar.organization=enturas-github \
+                -Dsonar.host.url=https://sonarcloud.io \
+                -Dsonar.branch.name=${{ github.ref_name }} \
+                -Dsonar.token=${{ secrets.ENTUR_SONAR_PASSWORD }}
+        env:
+          ARTIFACTORY_USER: ${{ secrets.ARTIFACTORY_USER }}
+          ARTIFACTORY_APIKEY: ${{ secrets.ARTIFACTORY_APIKEY }}
+      - name: Archive Build Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: app
+          path: build/libs
+          retention-days: 1
+          overwrite: true
+      - name: Upload Test Report
+        uses: dorny/test-reporter@v1
+        if: always()
+        with:
+          name: test-results
+          path: build/test-results/test/*.xml
+          reporter: java-junit
+      - name: Upload test artifacts
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: test-results
+          path: build/test-results/test/*.xml
+          overwrite: true
+
+  docker-build:
+    needs: gradle-build
+    uses: entur/gha-docker/.github/workflows/build.yml@v1
+    with:
+      build_artifact_name: app
+      build_artifact_path: build/libs/app.jar
+
+  docker-scan:
+    needs: docker-build
+    uses: entur/gha-security/.github/workflows/docker-scan.yml@v1
+    with:
+      image_artifact: ${{ needs.docker-build.outputs.image_artifact }}
+
+  docker-push:
+    needs: docker-build
+    uses: entur/gha-docker/.github/workflows/push.yml@v1
+    with:
+      git_tag: false
+
+
