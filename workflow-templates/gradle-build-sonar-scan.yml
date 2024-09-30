@@ -1,5 +1,5 @@
 #
-# Shared Workflows - CodeQL Scan
+# Shared Workflows - Gradle build with SonarCloud Scan
 #
 # Reusable Workflows used:
 # * Docker Lint
