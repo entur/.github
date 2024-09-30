@@ -27,9 +27,9 @@
 #   * Owner: Team Sikkerhet
 #   * Slack: #talk-sikkerhet
 # TODO: This file comes from entur/.github/workflow-templates/gradle-build-sonar-scan.yml
-#       This file assumes you have a SonarCloud Project already setup for the repo and a Gradle project.
-#       If you do not have a SonarCloud Project, please create one before using this workflow.
-#       Set the SONAR_PROJECT_KEY environment variable to the key of the SonarCloud Project.
+#       This shared workflow assumes you have a SonarCloud Project already setup for the repo and
+#       the gradle sonarcloud plugin setup https://docs.sonarsource.com/sonarcloud/advanced-setup/ci-based-analysis/sonarscanner-for-gradle/.
+#       Set the SONAR_PROJECT_KEY environment variable to the key of the SonarCloud Project you have created.
 #       Adopt to your needs, this file is yours now!
 #
 name: Gradle Build with SonarCloud Scan
