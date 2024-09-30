@@ -1,5 +1,5 @@
 #
-# Shared Workflows - Gradle build with SonarCloud Scan
+# Shared Workflows - Gradle build with SonarCloud scan
 #
 # Reusable Workflows used:
 # * Docker Lint
@@ -41,10 +41,6 @@ on:
   push:
     branches-ignore:
     - $default-branch
-env:
-  # Setting an environment variable with the value of a configuration variable
-  JAVA_VERSION: 21
-  SONAR_PROJECT_KEY: entur_REPLACEME
 
 jobs:
   docker-lint:
@@ -64,11 +60,15 @@ jobs:
 
   gradle-build: # https://github.com/actions/starter-workflows/blob/main/ci/gradle.yml
     runs-on: ubuntu-24.04
+    env:
+      JAVA_VERSION: 21
+      SONAR_PROJECT_KEY: entur_REPLACEMENT
     permissions:
       contents: read
       checks: write
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
       - name: Set up JDK ${{ env.JAVA_VERSION }}
@@ -76,14 +76,18 @@ jobs:
         with:
           java-version: ${{ env.JAVA_VERSION }}
           distribution: temurin
+          cache: gradle  # https://github.com/actions/setup-java?tab=readme-ov-file#caching-packages-dependencies
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
       - name: Build with Gradle Wrapper
-        run: ./gradlew build
         env:
           ARTIFACTORY_USER: ${{ secrets.ARTIFACTORY_USER }}
           ARTIFACTORY_APIKEY: ${{ secrets.ARTIFACTORY_APIKEY }}
+        run: ./gradlew build
       - name: Scan with SonarQube
+        env:
+          ARTIFACTORY_USER: ${{ secrets.ARTIFACTORY_USER }}
+          ARTIFACTORY_APIKEY: ${{ secrets.ARTIFACTORY_APIKEY }}
         run: |
             ./gradlew jacocoTestReport sonar --no-scan --no-rebuild -x test \
                 -Dsonar.projectKey=${{ env.SONAR_PROJECT_KEY }} \
@@ -91,9 +95,6 @@ jobs:
                 -Dsonar.host.url=https://sonarcloud.io \
                 -Dsonar.branch.name=${{ github.ref_name }} \
                 -Dsonar.token=${{ secrets.ENTUR_SONAR_PASSWORD }}
-        env:
-          ARTIFACTORY_USER: ${{ secrets.ARTIFACTORY_USER }}
-          ARTIFACTORY_APIKEY: ${{ secrets.ARTIFACTORY_APIKEY }}
       - name: Archive Build Artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -132,7 +133,3 @@ jobs:
   docker-push:
     needs: docker-build
     uses: entur/gha-docker/.github/workflows/push.yml@v1
-    with:
-      git_tag: false
-
-
