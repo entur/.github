@@ -27,10 +27,20 @@
 #   * Owner: Team Sikkerhet
 #   * Slack: #talk-sikkerhet
 # TODO: This file comes from entur/.github/workflow-templates/gradle-build-sonar-scan.yml
-#       This shared workflow assumes you have a SonarCloud Project already setup for the repo and
-#       the gradle sonarcloud plugin setup https://docs.sonarsource.com/sonarcloud/advanced-setup/ci-based-analysis/sonarscanner-for-gradle/.
-#       The jacocoTestReports also needs to be configured https://docs.gradle.org/current/userguide/jacoco_plugin.html
-#       Set the SONAR_PROJECT_KEY environment variable to the key of the SonarCloud Project you have created.
+#       The SonarCloud scan part needs the following to be set up:
+#       - SonarCloud project setup (without automatic scan)
+#         - Automatic Scan needs to be turned off for the SonarCloud project.
+#           This is done by setting the "Automatic Analysis" to "Off" in the project settings or during project creation.
+#           https://sonarcloud.io/project/analysis_method?id=$SONAR_PROJECT_KEY
+#           (only admins can do it, ask in #talk-plattform if you need help)
+#         - Change the SONAR_PROJECT_KEY bellow to the key of the SonarCloud Project you have created.
+#       - Make sure the gradle config gets the following from environment variables:
+#         - ARTIFACTORY_USER: The username for the Artifactory repository (this secret is fetched from the Entur GitHub organization and is already available for you).
+#         - ARTIFACTORY_APIKEY: The API key for the Artifactory repository (this secret is fetched from the Entur GitHub organization and is already available for you).
+#         - ENTUR_SONAR_PASSWORD: The password for the SonarCloud Project (this secret is fetched from the Entur GitHub organization and is already available for you).
+#       - The gradle sonarcloud plugin setup https://docs.sonarsource.com/sonarcloud/advanced-setup/ci-based-analysis/sonarscanner-for-gradle/.
+#       - The gradle jacocoTestReports plugin needs to be configured https://docs.gradle.org/current/userguide/jacoco_plugin.html
+#
 #       Adopt to your needs, this file is yours now!
 #
 name: Gradle Build with SonarCloud Scan
@@ -62,7 +72,7 @@ jobs:
     runs-on: ubuntu-24.04
     env:
       JAVA_VERSION: 21
-      SONAR_PROJECT_KEY: entur_REPLACEMENT
+      SONAR_PROJECT_KEY: entur_REPLACE_ME
     permissions:
       contents: read
       checks: write
@@ -88,13 +98,16 @@ jobs:
         env:
           ARTIFACTORY_USER: ${{ secrets.ARTIFACTORY_USER }}
           ARTIFACTORY_APIKEY: ${{ secrets.ARTIFACTORY_APIKEY }}
+          SONAR_PROJECT_KEY: ${{ env.SONAR_PROJECT_KEY }}
+          BRANCH_NAME: ${{ github.ref_name }}
+          ENTUR_SONAR_PASSWORD: ${{ secrets.ENTUR_SONAR_PASSWORD }}
         run: |
             ./gradlew jacocoTestReport sonar --no-scan --no-rebuild -x test \
-                -Dsonar.projectKey=${{ env.SONAR_PROJECT_KEY }} \
+                -Dsonar.projectKey=${SONAR_PROJECT_KEY} \
                 -Dsonar.organization=enturas-github \
                 -Dsonar.host.url=https://sonarcloud.io \
-                -Dsonar.branch.name=${{ github.ref_name }} \
-                -Dsonar.token=${{ secrets.ENTUR_SONAR_PASSWORD }}
+                -Dsonar.branch.name=${BRANCH_NAME} \
+                -Dsonar.token=${ENTUR_SONAR_PASSWORD}
       - name: Archive Build Artifacts
         uses: actions/upload-artifact@v4
         with:
