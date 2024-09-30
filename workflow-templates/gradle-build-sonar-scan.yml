@@ -29,6 +29,7 @@
 # TODO: This file comes from entur/.github/workflow-templates/gradle-build-sonar-scan.yml
 #       This shared workflow assumes you have a SonarCloud Project already setup for the repo and
 #       the gradle sonarcloud plugin setup https://docs.sonarsource.com/sonarcloud/advanced-setup/ci-based-analysis/sonarscanner-for-gradle/.
+#       The jacocoTestReports also needs to be configured https://docs.gradle.org/current/userguide/jacoco_plugin.html
 #       Set the SONAR_PROJECT_KEY environment variable to the key of the SonarCloud Project you have created.
 #       Adopt to your needs, this file is yours now!
 #
