@@ -48,6 +48,7 @@ on:
   pull_request:
     branches:
       - $default-branch
+
   push:
     branches-ignore:
     - $default-branch
@@ -95,6 +96,7 @@ jobs:
           ARTIFACTORY_APIKEY: ${{ secrets.ARTIFACTORY_APIKEY }}
         run: ./gradlew build
       - name: Scan with SonarQube
+        if: github.actor != 'dependabot[bot]' # Do not run SonarCloud scan for dependabot PRs
         env:
           ARTIFACTORY_USER: ${{ secrets.ARTIFACTORY_USER }}
           ARTIFACTORY_APIKEY: ${{ secrets.ARTIFACTORY_APIKEY }}
