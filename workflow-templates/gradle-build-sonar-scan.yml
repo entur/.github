@@ -35,8 +35,8 @@
 #           (only admins can do it, ask in #talk-plattform if you need help)
 #         - Change the SONAR_PROJECT_KEY bellow to the key of the SonarCloud Project you have created.
 #       - Make sure the gradle config gets the following from environment variables:
-#         - ARTIFACTORY_USER: The username for the Artifactory repository (this secret is fetched from the Entur GitHub organization and is already available for you).
-#         - ARTIFACTORY_APIKEY: The API key for the Artifactory repository (this secret is fetched from the Entur GitHub organization and is already available for you).
+#         - ARTIFACTORY_AUTH_USER: The username for the Artifactory repository (this secret is fetched from the Entur GitHub organization and is already available for you).
+#         - ARTIFACTORY_AUTH_TOKEN: The API key for the Artifactory repository (this secret is fetched from the Entur GitHub organization and is already available for you).
 #         - ENTUR_SONAR_PASSWORD: The password for the SonarCloud Project (this secret is fetched from the Entur GitHub organization and is already available for you).
 #       - The gradle sonarcloud plugin setup https://docs.sonarsource.com/sonarcloud/advanced-setup/ci-based-analysis/sonarscanner-for-gradle/.
 #       - The gradle jacocoTestReports plugin needs to be configured https://docs.gradle.org/current/userguide/jacoco_plugin.html
@@ -92,14 +92,14 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
       - name: Build with Gradle Wrapper
         env:
-          ARTIFACTORY_USER: ${{ secrets.ARTIFACTORY_USER }}
-          ARTIFACTORY_APIKEY: ${{ secrets.ARTIFACTORY_APIKEY }}
+          ARTIFACTORY_AUTH_USER: ${{ secrets.ARTIFACTORY_AUTH_USER }}
+          ARTIFACTORY_AUTH_TOKEN: ${{ secrets.ARTIFACTORY_AUTH_TOKEN }}
         run: ./gradlew build
       - name: Scan with SonarQube
         if: github.actor != 'dependabot[bot]' # Do not run SonarCloud scan for dependabot PRs
         env:
-          ARTIFACTORY_USER: ${{ secrets.ARTIFACTORY_USER }}
-          ARTIFACTORY_APIKEY: ${{ secrets.ARTIFACTORY_APIKEY }}
+          ARTIFACTORY_AUTH_USER: ${{ secrets.ARTIFACTORY_AUTH_USER }}
+          ARTIFACTORY_AUTH_TOKEN: ${{ secrets.ARTIFACTORY_AUTH_TOKEN }}
           SONAR_PROJECT_KEY: ${{ env.SONAR_PROJECT_KEY }}
           BRANCH_NAME: ${{ github.ref_name }}
           ENTUR_SONAR_PASSWORD: ${{ secrets.ENTUR_SONAR_PASSWORD }}
