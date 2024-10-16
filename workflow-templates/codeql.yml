@@ -19,11 +19,13 @@ on:
   push:
     branches:
       - $default-branch
+    paths-ignore:
+      - '**/README.md'
   schedule:
     - cron: "0 3 * * 1-5" # Run Monday to Friday at 3AM UTC
 
 jobs:
   code-scan:
     name: CodeQL Scan
-    uses: entur/gha-security/.github/workflows/code-scan.yml@v1
+    uses: entur/gha-security/.github/workflows/code-scan.yml@v2
     secrets: inherit
