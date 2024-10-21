@@ -14,8 +14,10 @@ name: Docker Lint
 
 on:
   push: # on push to any branch
-     paths: # only run on changes to the following files
+    paths: # only run on changes to the following files
       - Dockerfile
+    branches-ignore: # ignore on default branch, as it is already checked in PR
+      - $default-branch
   pull_request: # on pull request to any branch
     paths:
       - Dockerfile
