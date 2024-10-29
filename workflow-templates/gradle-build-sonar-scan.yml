@@ -90,6 +90,8 @@ jobs:
           cache: gradle  # https://github.com/actions/setup-java?tab=readme-ov-file#caching-packages-dependencies
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
+        with:
+          dependency-graph: generate-and-submit
       - name: Build with Gradle Wrapper
         env:
           ARTIFACTORY_AUTH_USER: ${{ secrets.ARTIFACTORY_AUTH_USER }}
