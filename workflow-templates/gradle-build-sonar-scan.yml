@@ -75,7 +75,7 @@ jobs:
       JAVA_VERSION: 21
       SONAR_PROJECT_KEY: entur_REPLACE_ME
     permissions:
-      contents: read
+      contents: write  # dependency-graph
       checks: write
     steps:
       - name: Checkout code
