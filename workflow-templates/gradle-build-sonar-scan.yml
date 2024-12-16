@@ -67,7 +67,7 @@ jobs:
       environment: ${{ matrix.environment }}
 
   terraform-lint:
-    uses: entur/gha-terraform/.github/workflows/lint.yml@v1
+    uses: entur/gha-terraform/.github/workflows/lint.yml@v2
 
   gradle-build: # https://github.com/actions/starter-workflows/blob/main/ci/gradle.yml
     runs-on: ubuntu-24.04
