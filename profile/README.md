@@ -1,8 +1,8 @@
-# Welcome to our GitHub!
+# Welcome to Entur
 
 Entur connects Norway's public transport and supplies the companies with digital services built for the future.
 
-![A drawing of Oslo skyline](https://om.entur.no/static/10878fe0584b4cce7e81cfce7badb3c1/previewOmEnturVideo.png)
+![Entur](profile/City.webp)
 
 Entur operates the national registry for all public transport in Norway, collecting data from 60 public transportation operators. The registry contains data about 75,000 daily departures on 4,700 routes. This data is open and free of charge for app and service developers.
 
