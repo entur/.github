@@ -1,0 +1,6 @@
+{
+  "name": "PR Workflow",
+  "description": "Entur PR Workflow Template",
+  "categories": ["continuous-integration"],
+  "iconName": "octicon git-pull-request"
+}

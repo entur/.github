@@ -22,7 +22,7 @@
 # Prerequisites:
 #    Appfactory Setup
 #
-# TODO: This file comes from entur/.github/workflows/ci-docker.yaml
+# TODO: This file comes from entur/.github/workflow-templates/docker-build-push.yaml
 #       Simply delete what you do not need. This file is yours now.
 #
 name: Docker Build and Push
@@ -44,14 +44,14 @@ jobs:
     uses: entur/gha-docker/.github/workflows/build.yml@v1
     with:
       dockerfile: Dockerfile
-  docker-push:
-    name: Push Docker Image
-    needs: docker-build
-    uses: entur/gha-docker/.github/workflows/push.yml@v1
   docker-scan:
     name: Scan Docker Image
     needs: docker-build
-    uses: entur/gha-security/.github/workflows/docker-scan.yml@v1
+    uses: entur/gha-security/.github/workflows/docker-scan.yml@v2
     secrets: inherit
     with:
       image_artifact: ${{ needs.docker-build.outputs.image_artifact }}
+  docker-push:
+    name: Push Docker Image
+    needs: docker-scan
+    uses: entur/gha-docker/.github/workflows/push.yml@v1

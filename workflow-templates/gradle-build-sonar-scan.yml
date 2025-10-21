@@ -1,0 +1,152 @@
+#
+# Shared Workflows - Gradle build with SonarCloud scan
+#
+# Reusable Workflows used:
+# * Docker Lint
+#   * Readme <https://github.com/entur/gha-docker/blob/main/README-lint.md>
+#   * Owner: Team Plattform
+#   * Slack: #Talk-plattform
+# * Helm Lint
+#   * Readme <https://github.com/entur/gha-helm/blob/main/README-lint.md>
+#   * Owner: Team Plattform
+#   * Slack: #Talk-plattform
+# * Terraform Lint
+#   * https://github.com/entur/gha-terraform/blob/main/README-lint.md
+#   * Owner: Team Plattform
+#   * Slack: #Talk-plattform
+# * Docker Build
+#   * Readme <https://github.com/entur/gha-docker/blob/main/README-build.md>
+#   * Owner: Team Plattform
+#   * Slack: #Talk-plattform
+# * Docker Push
+#   * Readme: <https://github.com/entur/gha-docker/blob/main/README-push.md>
+#   * Owner: Team Plattform
+#   * Slack: #Talk-plattform
+# * Docker Scan
+#   * Readme <https://github.com/entur/gha-security/blob/main/README-docker-scan.md>
+#   * Owner: Team Sikkerhet
+#   * Slack: #talk-sikkerhet
+# TODO: This file comes from entur/.github/workflow-templates/gradle-build-sonar-scan.yml
+#       The SonarCloud scan part needs the following to be set up:
+#       - SonarCloud project setup (without automatic scan)
+#         - Automatic Scan needs to be turned off for the SonarCloud project.
+#           This is done by setting the "Automatic Analysis" to "Off" in the project settings or during project creation.
+#           https://sonarcloud.io/project/analysis_method?id=$SONAR_PROJECT_KEY
+#           (only admins can do it, ask in #talk-plattform if you need help)
+#         - Change the SONAR_PROJECT_KEY bellow to the key of the SonarCloud Project you have created.
+#       - Make sure the gradle config gets the following from environment variables:
+#         - ARTIFACTORY_AUTH_USER: The username for the Artifactory repository (this secret is fetched from the Entur GitHub organization and is already available for you).
+#         - ARTIFACTORY_AUTH_TOKEN: The API key for the Artifactory repository (this secret is fetched from the Entur GitHub organization and is already available for you).
+#         - ENTUR_SONAR_PASSWORD: The password for the SonarCloud Project (this secret is fetched from the Entur GitHub organization and is already available for you).
+#       - The gradle sonarcloud plugin setup https://docs.sonarsource.com/sonarcloud/advanced-setup/ci-based-analysis/sonarscanner-for-gradle/.
+#       - The gradle jacocoTestReports plugin needs to be configured https://docs.gradle.org/current/userguide/jacoco_plugin.html
+#
+#       Adopt to your needs, this file is yours now!
+#
+name: Gradle Build with SonarCloud Scan
+on:
+  pull_request:
+    branches:
+      - $default-branch
+
+  push:
+    branches-ignore:
+    - $default-branch
+
+jobs:
+  docker-lint:
+    uses: entur/gha-docker/.github/workflows/lint.yml@v1
+
+  helm-lint:
+    name: Helm Lint
+    uses: entur/gha-helm/.github/workflows/lint.yml@v1
+    strategy:
+      matrix:
+        environment: [dev, tst, prd]
+    with:
+      environment: ${{ matrix.environment }}
+
+  terraform-lint:
+    uses: entur/gha-terraform/.github/workflows/lint.yml@v2
+
+  gradle-build: # https://github.com/actions/starter-workflows/blob/main/ci/gradle.yml
+    runs-on: ubuntu-24.04
+    env:
+      JAVA_VERSION: 21
+      SONAR_PROJECT_KEY: entur_REPLACE_ME
+    permissions:
+      contents: write  # dependency-graph
+      checks: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
+      - name: Set up JDK ${{ env.JAVA_VERSION }}
+        uses: actions/setup-java@v5
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: temurin
+          cache: gradle  # https://github.com/actions/setup-java?tab=readme-ov-file#caching-packages-dependencies
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          dependency-graph: generate-and-submit
+      - name: Build with Gradle Wrapper
+        env:
+          ARTIFACTORY_AUTH_USER: ${{ secrets.ARTIFACTORY_AUTH_USER }}
+          ARTIFACTORY_AUTH_TOKEN: ${{ secrets.ARTIFACTORY_AUTH_TOKEN }}
+        run: ./gradlew build
+      - name: Scan with SonarQube
+        if: github.actor != 'dependabot[bot]' # Do not run SonarCloud scan for dependabot PRs
+        env:
+          ARTIFACTORY_AUTH_USER: ${{ secrets.ARTIFACTORY_AUTH_USER }}
+          ARTIFACTORY_AUTH_TOKEN: ${{ secrets.ARTIFACTORY_AUTH_TOKEN }}
+          SONAR_PROJECT_KEY: ${{ env.SONAR_PROJECT_KEY }}
+          BRANCH_NAME: ${{ github.ref_name }}
+          ENTUR_SONAR_PASSWORD: ${{ secrets.ENTUR_SONAR_PASSWORD }}
+        run: |
+            ./gradlew jacocoTestReport sonar --no-scan --no-rebuild -x test \
+                -Dsonar.projectKey=${SONAR_PROJECT_KEY} \
+                -Dsonar.organization=enturas-github \
+                -Dsonar.host.url=https://sonarcloud.io \
+                -Dsonar.branch.name=${BRANCH_NAME} \
+                -Dsonar.token=${ENTUR_SONAR_PASSWORD}
+      - name: Archive Build Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: app
+          path: build/libs
+          retention-days: 1
+          overwrite: true
+      - name: Upload Test Report
+        uses: dorny/test-reporter@v1
+        if: always()
+        with:
+          name: test-results
+          path: build/test-results/test/*.xml
+          reporter: java-junit
+      - name: Upload test artifacts
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: test-results
+          path: build/test-results/test/*.xml
+          overwrite: true
+
+  docker-build:
+    needs: gradle-build
+    uses: entur/gha-docker/.github/workflows/build.yml@v1
+    with:
+      build_artifact_name: app
+      build_artifact_path: build/libs/app.jar
+
+  docker-scan:
+    needs: docker-build
+    uses: entur/gha-security/.github/workflows/docker-scan.yml@v2
+    with:
+      image_artifact: ${{ needs.docker-build.outputs.image_artifact }}
+
+  docker-push:
+    needs: docker-build
+    uses: entur/gha-docker/.github/workflows/push.yml@v1

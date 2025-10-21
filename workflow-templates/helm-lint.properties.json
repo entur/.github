@@ -1,0 +1,6 @@
+{
+  "name": "Helm Lint",
+  "description": "Entur Helm Lint Template",
+  "categories": ["Helm", "testing", "code-quality"],
+  "iconName": "octicon diff-modified"
+}

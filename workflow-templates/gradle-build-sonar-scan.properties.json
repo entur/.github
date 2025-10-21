@@ -1,0 +1,6 @@
+{
+  "name": "Gradle build with SonarCloud scan",
+  "description": "Entur Gradle build with SonarCloud Scan Template",
+  "categories": ["code-quality","Dockerfile","Gradle"],
+  "iconName": "octicon code-review"
+}
