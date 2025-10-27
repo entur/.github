@@ -113,7 +113,7 @@ jobs:
                 -Dsonar.branch.name=${BRANCH_NAME} \
                 -Dsonar.token=${ENTUR_SONAR_PASSWORD}
       - name: Archive Build Artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: app
           path: build/libs
@@ -127,7 +127,7 @@ jobs:
           path: build/test-results/test/*.xml
           reporter: java-junit
       - name: Upload test artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         if: failure()
         with:
           name: test-results
