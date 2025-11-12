@@ -23,8 +23,8 @@ jobs:
       - name: Build with Gradle Wrapper
         run: ./gradlew build
         env:
-          ARTIFACTORY_USER: ${{ secrets.ARTIFACTORY_USER }}
-          ARTIFACTORY_APIKEY: ${{ secrets.ARTIFACTORY_APIKEY }}
+          ARTIFACTORY_AUTH_USER: ${{ secrets.ARTIFACTORY_AUTH_USER }}
+          ARTIFACTORY_AUTH_TOKEN: ${{ secrets.ARTIFACTORY_AUTH_TOKEN }}
           ARTIFACTORY_URL: ${{ secrets.ARTIFACTORY_URL }}
       - name: Archive Build Artifacts
         if: success()
