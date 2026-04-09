@@ -78,19 +78,13 @@ jobs:
       contents: write  # dependency-graph
       checks: write
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v6
-        with:
-          fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
-      - name: Set up JDK ${{ env.JAVA_VERSION }}
-        uses: actions/setup-java@v5
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Set up Java and Gradle cache
+        uses: entur/ror-gha-workflows/.github/actions/gradle-cache@412f7b46636a7f65443195b9b8d4984505e06501 # main
         with:
           java-version: ${{ env.JAVA_VERSION }}
-          distribution: temurin
-          cache: gradle  # https://github.com/actions/setup-java?tab=readme-ov-file#caching-packages-dependencies
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v5
-        with:
+          java-distribution: 'temurin'
           dependency-graph: generate-and-submit
       - name: Build with Gradle Wrapper
         env:
