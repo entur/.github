@@ -120,7 +120,7 @@ jobs:
           retention-days: 1
           overwrite: true
       - name: Upload Test Report
-        uses: dorny/test-reporter@v2
+        uses: dorny/test-reporter@v3
         if: always()
         with:
           name: test-results
