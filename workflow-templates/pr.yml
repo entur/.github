@@ -27,7 +27,7 @@ jobs:
           java-version: 21
           distribution: temurin
       - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@346a44564f803579f2a9d82d6570fa5c56d80eff # v4.4.2
+        uses: gradle/actions/setup-gradle@1cff18a4cfab5cd8d4c49a8ccf11c1ad18bb30b9 # v4.4.2
       - name: Build with Gradle Wrapper
         run: ./gradlew build
         env:
